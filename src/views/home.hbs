@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>LOGIN USUARIO</h1>
+    <form method="POST" action="/api/users/login">
+        <label for="email">Email</label>
+        <input type="email" name="email" required>
+        <label for="password">Password</label>
+        <input type="password" name="password" required>
+        <button type="submit">Login</button>
+    </form>
+    <hr>
+
+    <h3> SINO ESTAS REGISTRADO, HAZLO AQUI !</h3>
+    <form method="POST" action="/api/users/register">
+
+        <label for="first_name">FIRST_NAME</label>
+        <input type="text" name="first_name" required>
+
+        <label for="last_name">LAST_NAME</label>
+        <input type="text" name="last_name" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" required>
+
+        <label for="age">AGE</label>
+        <input type="number" name="age" required>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" required>
+
+        <label for="role">ROLE</label>
+        <select name="role" required>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button type="submit">REGISTER</button>
+    </form>
+    <hr>
+
+    <h3> REVISA TODOS LOS PRODUCTOS AQUI!</h3>
+    <form method="GET" action="/api/products">
+        <button type="submit">REVISAR TODOS LOS PRODUCTOS</button>
+    </form>
+
+</body>
+</html>
