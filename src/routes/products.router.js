@@ -2,6 +2,7 @@
 
 import { Router } from "express";
 const router = Router()
+import { deleteProduct} from "../controllers/product.controller.js"
 
 
 import productModel from "../models/product.model.js"
@@ -96,4 +97,6 @@ router.delete("/:pid", async(req,res)=>{
     res.send({result: "success", payload: result})
 })
 
+
+router.delete("/:pid", deleteProduct)
 export default router

@@ -1,19 +1,10 @@
 import userModel from "../models/user.model.js"
+import cartModel from "../models/cart.model.js"
 
 export default class User {
-    getUsers = async () => {
+    getByEmail = async (email) => {
         try {
-            let users = await userModel.find()
-            return users
-        } catch (error) {
-            console.log(error)
-            return null
-        }
-    }
-
-    getUserById = async (id) => {
-        try {
-            let user = await userModel.findOne({ _id: id })
+            let user = await userModel.findOne({email: email})
             return user
         } catch (error) {
             console.log(error)
@@ -21,22 +12,35 @@ export default class User {
         }
     }
 
-    saveUser = async (user) => {
-        try {
+
+    createUser = async(user) =>{
+        try{
             let result = await userModel.create(user)
             return result
-        } catch (error) {
+        }catch(error){
             console.log(error)
             return null
         }
     }
 
-    updateUser = async (id, user) => {
-        try {
-            let result = await userModel.updateOne({ _id: id }, { $set: user })
+    createCart = async() =>{
+        try{
+            let result = await cartModel.create({})
             return result
-        } catch (error) {
+        }catch(error){
+            console.log(error)
             return null
         }
     }
+
+    getCarrito = async(id) =>{
+        try{
+            let result = await cartModel.findOne({_id: id})
+            return result
+        }catch(error){
+            console.log(error)
+            return null
+        }
+    }
+
 }

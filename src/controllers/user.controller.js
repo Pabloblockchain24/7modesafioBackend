@@ -1,15 +1,9 @@
 import User from "../dao/classes/user.dao.js"
-
-import userService from "../dao/models/user.model.js"
 import bcrypt from "bcrypt"
-import cartModel from "../models/cart.model.js"
 import createAccessToken from "../utils.js"
-
+import jwt from "jsonwebtoken"
 
 const usersService = new User()
-
-
-
 
 export const logout = async (req, res) => {
     res.cookie("token", "", {
@@ -22,12 +16,12 @@ export const logout = async (req, res) => {
 export const register = async(req,res) =>{
         const { first_name, last_name, email, age, password, role } = req.body
         try {
-            const userFound = await userService.findOne({ email })
+            const userFound = await usersService.getByEmail({email})
             if (userFound) return res.status(400).json(["El email ya esta registrado"])
+
             const hash = await bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-            const newUser = await userService.create({ first_name, last_name, email, age, password: hash, role })
-    
-            newUser.cart = await cartModel.create({})
+            const newUser = await usersService.createUser({ first_name, last_name, email, age, password: hash, role })
+            newUser.cart = await usersService.createCart({})
             let resultado = await newUser.save();
     
             res.json({
@@ -47,7 +41,7 @@ export const register = async(req,res) =>{
 
 export const login = async (req,res)=>{
         const { email, password } = req.body
-        const userFound = await userService.findOne({ email })
+        const userFound = await usersService.getByEmail({ email })
         if (!userFound) return res.status(401).json({ message: "Usuario no encontrado" })
     
         const isMatch = await bcrypt.compareSync(password, userFound.password)
@@ -56,7 +50,7 @@ export const login = async (req,res)=>{
         const token = await createAccessToken({ id: userFound._id })
         res.cookie("token", token)
     
-        const cartFound = await cartModel.findOne({ _id: userFound.cart }).populate("products.product")
+        const cartFound = await usersService.getCarrito({ _id: userFound.cart }).populate("products.product")
     
             res.render("profile.hbs", {
                 first_name: userFound.first_name,
@@ -71,19 +65,24 @@ export const login = async (req,res)=>{
 }
 
 
-export const getUsers = async (req, res) => {
-    let result = await usersService.getUsers()
-    res.send({ status: "success", result: result })
-}
-
-export const getUserById = async (req, res) => {
-    const { uid } = req.params
-    let user = await usersService.getUserById(uid)
-    res.send({ status: "success", result: user })
-}
-
-export const saveUser = async (req, res) => {
-    const user = req.body
-    let result = await usersService.saveUser(user)
-    res.send({ status: "success", result: result })
+export const home = async(req,res) =>{
+        const { token } = req.cookies
+        if (!token) {
+            return res.render("home.hbs", {
+                title: "Vista login"
+            })
+        }
+        jwt.verify(token, "CODER_TOKEN", async (err, user) => {
+            if (err) return res.status(403).json({ message: "Token invalido" })
+            const userFound = await usersService.getByEmail({email})
+            const cartFound = await usersService.getCarrito({ _id: userFound.cart }).populate("products.product")
+                res.render("profile.hbs", {
+                    first_name: userFound.first_name,
+                    last_name: userFound.last_name,
+                    email: userFound.email,
+                    age: userFound.age,
+                    cart: cartFound.products,
+                    role: userFound.role,
+                })
+        })
 }
