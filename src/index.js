@@ -23,10 +23,13 @@ app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
 app.set("views", path.resolve(__dirname + "/views"))
  
+
+// en el archivo .env tenemos => PORT = 8080
 app.listen(config.port, () => {
     console.log(`Servidor corriendo en puerto ${config.port}`)
 })
 
+// en el archivo .env tenemos => MONGO_URL = mongodb+srv://parcepaivaTest:clusterMongo@clustercoderhouse.unxc6mu.mongodb.net/?retryWrites=true&w=majority
 mongoose.connect(config.MONGO_URL)
     .then(() => {
         console.log("Conectado a la base de datos")
