@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 import cookieParser from "cookie-parser";
 import {engine} from "express-handlebars"
 
@@ -15,11 +14,7 @@ import userRouter from "./routes/users.router.js"
 import sessionRouter from "./routes/sessions.router.js"
 import config from "./config/config.js"
 
-
-
-
 const app = express()
-
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
@@ -28,12 +23,9 @@ app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
 app.set("views", path.resolve(__dirname + "/views"))
  
-
-
 app.listen(config.port, () => {
     console.log(`Servidor corriendo en puerto ${config.port}`)
 })
-
 
 mongoose.connect(config.MONGO_URL)
     .then(() => {

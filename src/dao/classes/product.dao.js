@@ -1,10 +1,10 @@
 import productModel from "../models/product.model.js"
 
 export default class Product {
-    getById = async (email) => {
+    getProductById = async (pid) => {
         try {
-            let user = await userModel.findOne({email: email})
-            return user
+            let productFound = await productModel.findOne({_id: pid})
+            return productFound
         } catch (error) {
             console.log(error)
             return null
@@ -20,4 +20,25 @@ export default class Product {
             return null
         }
     }
+
+    updateProductById = async(pid, productToReplace) =>{
+        try {
+            let result = await productModel.updateOne({_id: pid}, productToReplace)
+            return result
+        }catch (error) {
+            console.log(error)
+            return null
+        }
+    }
+
+    postProduct = async(newProduct) =>{
+        try {
+            let result = await productModel.create(newProduct)
+            return result
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    }
+
 }
